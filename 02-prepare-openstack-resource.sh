@@ -11,6 +11,7 @@ openstack security group rule create --egress clusterapi
 
 
 # CentOS image upload
+cd ~/
 wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1905.qcow2
 openstack image create 'CentOS-7-1905' --disk-format qcow2 --file ~/CentOS-7-x86_64-GenericCloud-1905.qcow2 --container-format bare --public
 
