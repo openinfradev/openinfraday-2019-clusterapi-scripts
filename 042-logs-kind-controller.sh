@@ -1,4 +1,4 @@
 #!/bin/bash
 
 export KUBECONFIG="$(kind get kubeconfig-path --name="clusterapi")"
-kubectl get pods --all-namespaces
+kubectl logs -f clusterapi-controllers-0 -n openstack-provider-system
