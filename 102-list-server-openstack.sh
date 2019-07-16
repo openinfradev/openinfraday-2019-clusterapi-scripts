@@ -1,3 +1,3 @@
 #!/bin/bash
 
-openstack get server list
+openstack server list
