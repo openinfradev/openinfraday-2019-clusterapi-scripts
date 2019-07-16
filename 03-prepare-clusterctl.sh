@@ -1,9 +1,11 @@
 #!/bin/bash
 
+source ~/.bashrc
+
 # create ~/clouds.yaml
 PROJECT_ID=$(openstack project list | grep admin | awk '{print $2}')
 
-cat >> ~/clouds.yaml <<EOF
+cat > ~/clouds.yaml <<EOF
 clouds:
   taco-openstack:
     auth:
@@ -13,12 +15,9 @@ clouds:
       password: password
       user_domain_name: Default
       project_domain_name: Default
-      project_id: <PROJECT_ID>
+      project_id: ${PROJECT_ID}
     region_name: RegionOne
 EOF
-
-sed -i "s/<PROJECT_ID>/${PROJECT_ID}/g" ~/clouds.yaml
-
 
 # user-data host IP
 IP=$(ifconfig bond0 | grep netmask | awk '{print $2}')
@@ -31,6 +30,7 @@ sed -i "s/YOUR-NODE-IP/${IP}/g" worker-user-data.sh
 
 # generate YAML
 cd $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/cmd/clusterctl/examples/openstack
+rm -rf out
 ./generate-yaml.sh -f ~/clouds.yaml taco-openstack centos
 
 
@@ -55,6 +55,14 @@ sed -i "${FLOATING_IP_LINENUM_1}s/<Available Floating IP>/${FLOATING_IP_1}/" out
 sed -i "${FLOATING_IP_LINENUM_2}s/<Available Floating IP>/${FLOATING_IP_2}/" out/machines.yaml
 
 TAGS_LINENUM_1=$(cat out/machines.yaml | grep -n tags | awk '{print $1}' | tr -d ':' | head -n 1)
+if [[ ! -z "$TAGS_LINENUM_1" ]]; then
+  sed -i "${TAGS_LINENUM_1},$(($TAGS_LINENUM_1+3))d" out/machines.yaml
+fi
 TAGS_LINENUM_2=$(cat out/machines.yaml | grep -n tags | awk '{print $1}' | tr -d ':' | tail -n 1)
-sed -i "${TAGS_LINENUM_1},$(($TAGS_LINE_NUM+4))d" out/machines.yaml
-sed -i "${TAGS_LINENUM_2},$(($TAGS_LINE_NUM+4))d" out/machines.yaml
+if [[ ! -z "$TAGS_LINENUM_2" ]]; then
+  sed -i "${TAGS_LINENUM_2},$(($TAGS_LINENUM_2+3))d" out/machines.yaml
+fi
+
+cp -f out/cluster.yaml ~/
+cp -f out/machines.yaml ~/
+cp -f out/provider-components.yaml ~/

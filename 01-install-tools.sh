@@ -23,7 +23,8 @@ mv ~/go/bin/yq.v2 /usr/local/bin/yq
 git clone -b taco-clusterapi https://github.com/openinfradev/cluster-api-provider-openstack.git $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack
 cd $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/
 make clusterctl
-ln -s $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/bin/clusterctl ~/go/bin/clusterctl
+rm -rf ~/go/bin/clusterctl
+cp -f $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/bin/clusterctl ~/go/bin/
 
 
 # bootstraping machine tool install (kind)
