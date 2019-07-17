@@ -25,9 +25,10 @@ git clone -b taco-clusterapi https://github.com/openinfradev/cluster-api-provide
 cd $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/
 make clusterctl
 rm -rf ~/go/bin/clusterctl
-cp -f $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/bin/clusterctl ~/go/bin/
+cp -f $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/bin/clusterctl /usr/local/bin/
 
 
 # bootstraping machine tool install (kind)
 cd ~/
 GO111MODULE="on" go get sigs.k8s.io/kind@v0.4.0
+cp -f ~/go/bin/kind /usr/local/bin/
