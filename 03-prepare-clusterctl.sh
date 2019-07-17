@@ -3,6 +3,7 @@
 source ~/.bashrc
 
 # create ~/clouds.yaml
+echo "Create clouds.yaml..."
 PROJECT_ID=$(openstack project list | grep admin | awk '{print $2}')
 
 cat > ~/clouds.yaml <<EOF
@@ -18,27 +19,32 @@ clouds:
       project_id: ${PROJECT_ID}
     region_name: RegionOne
 EOF
+echo "Done"
 
 # user-data host IP
+echo "Change user-data host IP..."
 IP=$(ifconfig bond0 | grep netmask | awk '{print $2}')
 
 cd $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/cmd/clusterctl/examples/openstack/provider-component/user-data/centos/templates
 
 sed -i "s/YOUR-NODE-IP/${IP}/g" master-user-data.sh
 sed -i "s/YOUR-NODE-IP/${IP}/g" worker-user-data.sh
-
+echo "Done"
 
 # generate YAML
+echo "Generate YAML files..."
 cd $GOPATH/src/sigs.k8s.io/cluster-api-provider-openstack/cmd/clusterctl/examples/openstack
 rm -rf out
 ./generate-yaml.sh -f ~/clouds.yaml taco-openstack centos
-
+echo "Done"
 
 # import openstack keypair
+echo "Make openstack keypair..."
 openstack keypair create --public-key ~/.ssh/openstack_tmp.pub cluster-api-provider-openstack
+echo "Done"
 
-
-# correct machines.yaml
+# Fix machines.yaml
+echo "Fix machines.yaml..."
 NETWORK_UUID=$(openstack network list | grep private-net | awk '{print $2}')
 SECURITY_GROUP=$(openstack security group list | grep clusterapi | awk '{print $2}')
 sed -i "s/<Image Name>/CentOS-7-1905/g" out/machines.yaml
@@ -66,3 +72,4 @@ fi
 cp -f out/cluster.yaml ~/
 cp -f out/machines.yaml ~/
 cp -f out/provider-components.yaml ~/
+echo "Done"
