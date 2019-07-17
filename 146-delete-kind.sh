@@ -10,6 +10,9 @@ if [[ $(openstack server list | grep master) ]]; then
   MASTER=$(openstack server list | grep master | awk '{print $4}')
   openstack server delete ${MASTER}
   echo "Done"
+  echo "Create another floating ip"
+  openstack floating ip create public-net
+  echo "Done"
 fi
 
 # remove openstack worker vm, if created
@@ -18,4 +21,6 @@ if [[ $(openstack server list | grep node) ]]; then
   WORKER=$(openstack server list | grep node | awk '{print $4}')
   openstack server delete ${WORKER}
   echo "Done"
+  echo "Create another floating ip"
+  openstack floating ip create public-net
 fi
