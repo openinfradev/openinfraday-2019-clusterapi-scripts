@@ -10,6 +10,7 @@ export OS_IDENTITY_API_VERSION=3
 export OS_IMAGE_API_VERSION=2
 
 # openstack security group
+echo "Make openstack security group..."
 openstack security group create clusterapi
 openstack security group rule create --ingress --protocol tcp --dst-port 6443 clusterapi
 openstack security group rule create --ingress --protocol tcp --dst-port 22 clusterapi
@@ -17,13 +18,18 @@ openstack security group rule create --ingress --protocol tcp --dst-port 179 clu
 openstack security group rule create --ingress --protocol tcp --dst-port 3000:32767 clusterapi
 openstack security group rule create --ingress --protocol tcp --dst-port 443 clusterapi
 openstack security group rule create --egress clusterapi
+echo "Done"
 
 # CentOS image upload
+echo "Upload CentOS image..."
 cd ~/
 wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1905.qcow2
 openstack image create 'CentOS-7-1905' --disk-format qcow2 --file ~/CentOS-7-x86_64-GenericCloud-1905.qcow2 --container-format bare --public
 rm -f CentOS-7-x86_64-GenericCloud-1905.qcow2
+echo "Done"
 
 # create 2 floating ips
+echo "Create 2 floating ips"
 openstack floating ip create public-net
 openstack floating ip create public-net
+echo "Done"
