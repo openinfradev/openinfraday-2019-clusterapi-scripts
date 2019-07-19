@@ -51,7 +51,7 @@ sed -i "s/<Image Name>/CentOS-7-1905/g" out/machines.yaml
 sed -i "s/<SSH Username>/centos/g" out/machines.yaml
 sed -i "s/<Kubernetes Network ID>/${NETWORK_UUID}/g" out/machines.yaml
 sed -i "s/<Security Group ID>/${SECURITY_GROUP}/g" out/machines.yaml
-sed -i "s/1.14.0/1.14.3/g" out/machines.yaml
+sed -i "s/1.15.0/1.14.3/g" out/machines.yaml
 
 FLOATING_IP_1=$(openstack floating ip list | grep None | head -n 1 | awk '{print $4}')
 FLOATING_IP_2=$(openstack floating ip list | grep None | head -n 2 | tail -n 1 | awk '{print $4}')
